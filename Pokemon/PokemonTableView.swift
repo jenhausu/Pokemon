@@ -9,44 +9,48 @@ import SwiftUI
 
 struct PokemonTableView: View {
     
-    @State private var datas: [PokemonData] = [PokemonData(PokemonId: "3",
-                                                           name: "venusaur",
-                                                           height: "20",
-                                                           weight: "1000",
-                                                           types: [PokemonData.PokemonType(name: "Grass"),
-                                                                   PokemonData.PokemonType(name: "poison")],
-                                                           pictureUrl: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/3.png")),
-                                               PokemonData(PokemonId: "3",
-                                                           name: "venusaur",
-                                                           height: "20",
-                                                           weight: "1000",
-                                                           types: [PokemonData.PokemonType(name: "Grass"),
-                                                                   PokemonData.PokemonType(name: "poison")],
-                                                           pictureUrl: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/3.png"))]
+    @State private var datas: [PokemonData] = SampleData.datas
+    
+    @State private var isFavoriteViewPresented: Bool = false
+    
+    @StateObject var viewModel = PokemonViewModel()
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                LazyVStack {
-                    ForEach(datas) { data in
-                        PokemonTableCellView(data: data)
-                    }
+            ContentView()
+        }
+        .environmentObject(viewModel)
+    }
+    
+    @ViewBuilder
+    private func ContentView() -> some View {
+        ScrollView {
+            LazyVStack {
+                ForEachWithIndex(datas) { index, element in
+                    PokemonTableCellView(data: datas[index])
                 }
-                .background(Color.gray)
             }
-            .navigationTitle("Pokemon")
-            .toolbar {
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    Button {
-                        
-                    } label: {
-                        Image(systemName: "heart.fill")
-                            .tint(.red)
-                    }
-                    
+            .background(Color.gray)
+        }
+        .navigationTitle("Pokemon")
+        .toolbar {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Button {
+                    isFavoriteViewPresented = true
+                } label: {
+                    Image(systemName: "heart.fill")
+                        .tint(.red)
                 }
+                
             }
         }
+        .background(
+            NavigationLink(isActive: $isFavoriteViewPresented, destination: {
+                FavoriteTableView(datas: viewModel.favritePokemons)
+            }, label: {
+                EmptyView()
+            })
+        )
     }
     
 }

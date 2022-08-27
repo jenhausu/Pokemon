@@ -12,6 +12,10 @@ struct PokemonTableCellView: View {
     
     let data: PokemonData
     
+    @State var favorite: Bool = false
+    
+    @EnvironmentObject var viewModel: PokemonViewModel
+    
     var body: some View {
         HStack {
             KFImage(data.pictureUrl)
@@ -29,20 +33,38 @@ struct PokemonTableCellView: View {
                 Text("weight: \(data.weight)")
             }
             Spacer()
+            Button {
+                if favorite {
+                    viewModel.favritePokemons = viewModel.favritePokemons.filter { $0.id != data.id }
+                } else {
+                    viewModel.favritePokemons.append(data)
+                }
+                
+                favorite.toggle()
+            } label: {
+                if favorite {
+                    Image(systemName: "heart.fill")
+                } else {
+                    Image(systemName: "heart")
+                }
+            }
+            .tint(.red)
         }
         .padding()
+        .onAppear {
+            if viewModel.favritePokemons.contains(data) {
+                favorite = true
+            } else {
+                favorite = false
+            }
+        }
     }
+    
 }
 
 struct PokemonTableCellView_Previews: PreviewProvider {
     static var previews: some View {
-        PokemonTableCellView(data: PokemonData(PokemonId: "3",
-                                               name: "venusaur",
-                                               height: "20",
-                                               weight: "1000",
-                                               types: [PokemonData.PokemonType(name: "Grass"),
-                                                       PokemonData.PokemonType(name: "poison")],
-                                               pictureUrl: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/3.png")))
+        PokemonTableCellView(data: SampleData.data)
         .previewLayout(.sizeThatFits)
     }
 }
