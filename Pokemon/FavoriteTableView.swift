@@ -17,7 +17,7 @@ struct FavoriteTableView: View {
         ScrollView {
             LazyVStack {
                 ForEachWithIndex(datas) { index, element in
-                    PokemonTableCellView(data: datas[index])
+                    PokemonTableCellView(data: .constant(datas[index]))
                 }
             }
             .background(Color.gray)

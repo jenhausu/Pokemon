@@ -13,12 +13,12 @@ struct PokemonData: Identifiable, Equatable {
     }
     
     let id = UUID()
-    let PokemonId: String
+    let pokemonId: String
     let name: String
-    let height: String
-    let weight: String
-    let types: [PokemonType]
-    let pictureUrl: URL?
+    var height: String?
+    var weight: String?
+    var types: [PokemonType]?
+    var pictureUrl: URL?
     
     struct PokemonType {
         let name: String

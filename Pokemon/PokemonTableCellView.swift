@@ -7,31 +7,38 @@
 
 import SwiftUI
 import Kingfisher
+import NetworkKit
 
 struct PokemonTableCellView: View {
     
-    let data: PokemonData
+    @Binding var data: PokemonData
     
-    @State var favorite: Bool = false
+    @State private var favorite: Bool = false
+    @State private var dataDidLoad: Bool = false
     
     @EnvironmentObject var viewModel: PokemonViewModel
     
     var body: some View {
         HStack {
             KFImage(data.pictureUrl)
+                .placeholder {
+                    ProgressView()
+                }
                 .resizable()
                 .scaledToFill()
                 .background(Color.white)
                 .frame(width: 80, height: 80)
                 .cornerRadius(10)
             VStack(alignment: .leading) {
-                HStack {
-                    Text("id: \(data.PokemonId)")
-                    Text("name: \(data.name)")
+                if let id = data.pokemonId {
+                    Text("編號: \(id)")
                 }
-                Text("height: \(data.height)")
-                Text("weight: \(data.weight)")
+                Spacer()
+                if let name = data.name {
+                    Text("名字: \(name)")
+                }
             }
+            .padding()
             Spacer()
             Button {
                 if favorite {
@@ -57,6 +64,19 @@ struct PokemonTableCellView: View {
             } else {
                 favorite = false
             }
+            
+            Task {
+                if dataDidLoad == false {
+                    dataDidLoad = true
+                    do {
+                        let response = try await viewModel.getPokemon(id: data.pokemonId)
+                        data.height = "\(response.height)"
+                        data.weight = "\(response.weight)"
+                        data.pictureUrl = URL(string: response.sprites.front_default)
+                        data.types = response.types.map { PokemonData.PokemonType(name: $0.type.name) }
+                    }
+                }
+            }
         }
     }
     
@@ -64,7 +84,7 @@ struct PokemonTableCellView: View {
 
 struct PokemonTableCellView_Previews: PreviewProvider {
     static var previews: some View {
-        PokemonTableCellView(data: SampleData.data)
+        PokemonTableCellView(data: .constant(SampleData.data))
         .previewLayout(.sizeThatFits)
     }
 }

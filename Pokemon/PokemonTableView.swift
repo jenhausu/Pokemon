@@ -6,15 +6,14 @@
 //
 
 import SwiftUI
+import NetworkKit
 
 struct PokemonTableView: View {
-    
-    @State private var datas: [PokemonData] = SampleData.datas
-    
+        
     @State private var isFavoriteViewPresented: Bool = false
     
     @StateObject var viewModel = PokemonViewModel()
-    
+        
     var body: some View {
         NavigationView {
             ContentView()
@@ -26,9 +25,18 @@ struct PokemonTableView: View {
     private func ContentView() -> some View {
         ScrollView {
             LazyVStack {
-                ForEachWithIndex(datas) { index, element in
-                    PokemonTableCellView(data: datas[index])
+                ForEach($viewModel.pokemonDatas) { data in
+                    PokemonTableCellView(data: data)
                 }
+                ProgressView()
+                    .onAppear {
+                        Task {
+                            do {
+                                try await viewModel.getPokemonList(limit: 20,
+                                                                   offset: viewModel.pokemonDatas.count + 20)
+                            }
+                        }
+                    }
             }
             .background(Color.gray)
         }
@@ -51,6 +59,13 @@ struct PokemonTableView: View {
                 EmptyView()
             })
         )
+        .onAppear {
+            Task {
+                do {
+                    try await viewModel.getPokemonList(limit: 20, offset: 0)
+                }
+            }
+        }
     }
     
 }
