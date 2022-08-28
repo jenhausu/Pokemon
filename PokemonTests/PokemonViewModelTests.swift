@@ -69,4 +69,50 @@ final class PokemonViewModelTests: XCTestCase {
         }
     }
     
+    // MARK: - Favorite
+    
+    func testAddFavorite_twoItem_countTwo() {
+        let pokemon = PokemonData(pokemonId: "1", name: "aaa")
+        sut.addFavorite(pokemon)
+        
+        let pokemon2 = PokemonData(pokemonId: "2", name: "bbb")
+        sut.addFavorite(pokemon2)
+        
+        XCTAssertEqual(sut.favritePokemons.count, 2)
+    }
+    
+    func testFavorite_addRedundantItem_countOne() {
+        let pokemon = PokemonData(pokemonId: "1", name: "aaa")
+        sut.addFavorite(pokemon)
+        sut.addFavorite(pokemon)
+        
+        XCTAssertEqual(sut.favritePokemons.count, 1)
+    }
+    
+    func testRemoveFavorite() {
+        let pokemon = PokemonData(pokemonId: "1", name: "aaa")
+        sut.addFavorite(pokemon)
+        
+        let pokemon2 = PokemonData(pokemonId: "2", name: "bbb")
+        sut.addFavorite(pokemon2)
+        
+        sut.removeFavorite(pokemon)
+        
+        XCTAssertEqual(sut.favritePokemons.count, 1)
+        XCTAssertEqual(sut.favritePokemons, [pokemon2])
+    }
+    
+    func testRemoveFavorite_notExitItem_noCrash() {
+        let pokemon = PokemonData(pokemonId: "1", name: "aaa")
+        sut.addFavorite(pokemon)
+        
+        let pokemon2 = PokemonData(pokemonId: "2", name: "bbb")
+        sut.addFavorite(pokemon2)
+        
+        let pokemon3 = PokemonData(pokemonId: "3", name: "ccc")
+        sut.removeFavorite(pokemon3)
+        
+        XCTAssertEqual(sut.favritePokemons.count, 2)
+    }
+    
 }
