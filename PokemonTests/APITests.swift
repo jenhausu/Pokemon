@@ -47,5 +47,26 @@ class APITests: XCTestCase {
         
         XCTAssertEqual(sut.pokemonDatas.count, 60)
     }
+    
+    @MainActor
+    func testGetGokemonListData_DataOrderAscending() async {
+        do {
+            try await sut.getPokemonList(limit: 20, offset: 0)
+            try await sut.getPokemonList(limit: 20, offset: sut.pokemonDatas.count)
+            try await sut.getPokemonList(limit: 20, offset: sut.pokemonDatas.count)
+            try await sut.getPokemonList(limit: 20, offset: sut.pokemonDatas.count)
+            try await sut.getPokemonList(limit: 20, offset: sut.pokemonDatas.count)
+        } catch {
+            XCTAssertThrowsError(error.localizedDescription)
+        }
+        
+        var lastDataId: Int = 0
+        for data in sut.pokemonDatas {
+            if let id = Int(data.pokemonId) {
+                XCTAssertEqual(lastDataId + 1, id)
+                lastDataId = id
+            }
+        }
+    }
 
 }
