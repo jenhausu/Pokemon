@@ -11,13 +11,13 @@ struct FavoriteTableView: View {
     
     let datas: [PokemonData]
     
-    @EnvironmentObject var viewModel: PokemonViewModel
+    @ObservedObject var viewModel: PokemonViewModel
     
     var body: some View {
         ScrollView {
             LazyVStack {
                 ForEachWithIndex(datas) { index, element in
-                    PokemonTableCellView(data: .constant(datas[index]))
+                    PokemonTableCellView(data: .constant(datas[index]), viewModel: viewModel)
                 }
             }
             .background(Color.gray)
@@ -28,6 +28,6 @@ struct FavoriteTableView: View {
 
 struct FavoriteTableView_Previews: PreviewProvider {
     static var previews: some View {
-        FavoriteTableView(datas: [SampleData.data])
+        FavoriteTableView(datas: [SampleData.data], viewModel: PokemonViewModel())
     }
 }

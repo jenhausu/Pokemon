@@ -21,7 +21,6 @@ struct PokemonTableView: View {
         NavigationView {
             ContentView()
         }
-        .environmentObject(viewModel)
         .environmentObject(routeManager)
     }
     
@@ -30,7 +29,7 @@ struct PokemonTableView: View {
         ScrollView {
             LazyVStack {
                 ForEach($viewModel.pokemonDatas) { data in
-                    PokemonTableCellView(data: data)
+                    PokemonTableCellView(data: data, viewModel: viewModel)
                 }
                 ProgressView()
                     .onAppear {
@@ -62,7 +61,7 @@ struct PokemonTableView: View {
         }
         .background(
             NavigationLink(isActive: $isFavoriteViewPresented, destination: {
-                FavoriteTableView(datas: viewModel.favritePokemons)
+                FavoriteTableView(datas: viewModel.favritePokemons, viewModel: viewModel)
             }, label: {
                 EmptyView()
             })

@@ -12,11 +12,11 @@ import NetworkKit
 struct PokemonTableCellView: View {
     
     @Binding var data: PokemonData
+    @ObservedObject var viewModel: PokemonViewModel
     
     @State private var favorite: Bool = false
     @State private var dataDidLoad: Bool = false
     
-    @EnvironmentObject var viewModel: PokemonViewModel
     @EnvironmentObject var routeManager: RouteManager
 
     var body: some View {
@@ -89,7 +89,7 @@ struct PokemonTableCellView: View {
 
 struct PokemonTableCellView_Previews: PreviewProvider {
     static var previews: some View {
-        PokemonTableCellView(data: .constant(SampleData.data))
+        PokemonTableCellView(data: .constant(SampleData.data), viewModel: PokemonViewModel())
         .previewLayout(.sizeThatFits)
     }
 }
