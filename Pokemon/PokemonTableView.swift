@@ -11,6 +11,7 @@ import NetworkKit
 struct PokemonTableView: View {
         
     @State private var isFavoriteViewPresented: Bool = false
+    @State private var isLoading: Bool = false
     
     @StateObject var viewModel = PokemonViewModel()
         
@@ -32,8 +33,12 @@ struct PokemonTableView: View {
                     .onAppear {
                         Task {
                             do {
+                                guard !viewModel.pokemonDatas.isEmpty else { return }
+                                guard !isLoading else { return }
+                                isLoading = true
                                 try await viewModel.getPokemonList(limit: 20,
-                                                                   offset: viewModel.pokemonDatas.count + 20)
+                                                                   offset: viewModel.pokemonDatas.count)
+                                isLoading = false
                             }
                         }
                     }
@@ -62,7 +67,9 @@ struct PokemonTableView: View {
         .onAppear {
             Task {
                 do {
+                    isLoading = true
                     try await viewModel.getPokemonList(limit: 20, offset: 0)
+                    isLoading = false
                 }
             }
         }
