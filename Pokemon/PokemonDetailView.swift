@@ -55,12 +55,10 @@ struct PokemonDetailView: View {
             }
         }
         .onChange(of: favorite) { newValue in
-            if favorite {
-                if !viewModel.favritePokemons.contains(data) {
-                    viewModel.favritePokemons.append(data)
-                }
+            if newValue {
+                viewModel.addFavorite(data)
             } else {
-                viewModel.favritePokemons = viewModel.favritePokemons.filter { $0.id != data.id }
+                viewModel.removeFavorite(data)
             }
         }
     }

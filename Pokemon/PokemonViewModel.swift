@@ -43,4 +43,16 @@ class PokemonViewModel: ObservableObject {
         }
     }
     
+    func addFavorite(_ pokemon: PokemonData) {
+        if !favritePokemons.contains(pokemon) {
+            favritePokemons.append(pokemon)
+        }
+    }
+    
+    func removeFavorite(_ pokemon: PokemonData) {
+        if let index = favritePokemons.firstIndex(of: pokemon) {
+            favritePokemons.remove(at: index)
+        }
+    }
+    
 }

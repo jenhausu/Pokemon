@@ -43,9 +43,9 @@ struct PokemonTableCellView: View {
             Spacer()
             Button {
                 if favorite {
-                    viewModel.favritePokemons = viewModel.favritePokemons.filter { $0.id != data.id }
+                    viewModel.removeFavorite(data)
                 } else {
-                    viewModel.favritePokemons.append(data)
+                    viewModel.addFavorite(data)
                 }
                 
                 favorite.toggle()
