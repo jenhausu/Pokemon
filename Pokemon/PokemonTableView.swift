@@ -77,6 +77,8 @@ struct PokemonTableView: View {
         .onAppear {
             Task {
                 do {
+                    guard viewModel.pokemonDatas.isEmpty else { return }
+                    
                     isLoading = true
                     try await viewModel.getPokemonList(limit: 20, offset: 0)
                     isLoading = false
