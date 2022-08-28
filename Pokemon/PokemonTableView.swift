@@ -10,16 +10,19 @@ import NetworkKit
 
 struct PokemonTableView: View {
         
-    @State private var isFavoriteViewPresented: Bool = false
     @State private var isLoading: Bool = false
     
+    @State private var isFavoriteViewPresented: Bool = false
+    
     @StateObject var viewModel = PokemonViewModel()
+    @StateObject var routeManager = RouteManager()
         
     var body: some View {
         NavigationView {
             ContentView()
         }
         .environmentObject(viewModel)
+        .environmentObject(routeManager)
     }
     
     @ViewBuilder
@@ -60,6 +63,13 @@ struct PokemonTableView: View {
         .background(
             NavigationLink(isActive: $isFavoriteViewPresented, destination: {
                 FavoriteTableView(datas: viewModel.favritePokemons)
+            }, label: {
+                EmptyView()
+            })
+        )
+        .background(
+            NavigationLink(isActive: $routeManager.isDetailViewPresented, destination: {
+                PokemonDetailView(data: routeManager.selectedPokemon, viewModel: viewModel)
             }, label: {
                 EmptyView()
             })

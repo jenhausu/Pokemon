@@ -17,7 +17,8 @@ struct PokemonTableCellView: View {
     @State private var dataDidLoad: Bool = false
     
     @EnvironmentObject var viewModel: PokemonViewModel
-    
+    @EnvironmentObject var routeManager: RouteManager
+
     var body: some View {
         HStack {
             KFImage(data.pictureUrl)
@@ -77,6 +78,10 @@ struct PokemonTableCellView: View {
                     }
                 }
             }
+        }
+        .onTapGesture {
+            routeManager.selectedPokemon = data
+            routeManager.isDetailViewPresented = true
         }
     }
     
