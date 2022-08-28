@@ -1,5 +1,5 @@
 //
-//  APITests.swift
+//  PokemonViewModelTests.swift
 //  PokemonTests
 //
 //  Created by 蘇健豪 on 2022/8/28.
@@ -8,16 +8,16 @@
 import XCTest
 @testable import Pokemon
 
-class APITests: XCTestCase {
+final class PokemonViewModelTests: XCTestCase {
     
     let sut = PokemonViewModel()
-
+    
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         sut.pokemonDatas = []
         sut.favritePokemons = []
     }
-
+    
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         sut.pokemonDatas = []
@@ -68,5 +68,5 @@ class APITests: XCTestCase {
             }
         }
     }
-
+    
 }
