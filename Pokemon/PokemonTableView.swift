@@ -35,7 +35,6 @@ struct PokemonTableView: View {
                     .onAppear {
                         Task {
                             do {
-                                guard !viewModel.pokemonDatas.isEmpty else { return }
                                 guard !isLoading else { return }
                                 isLoading = true
                                 try await viewModel.getPokemonList(limit: 20,
@@ -73,17 +72,6 @@ struct PokemonTableView: View {
                 EmptyView()
             })
         )
-        .onAppear {
-            Task {
-                do {
-                    guard viewModel.pokemonDatas.isEmpty else { return }
-                    
-                    isLoading = true
-                    try await viewModel.getPokemonList(limit: 20, offset: 0)
-                    isLoading = false
-                }
-            }
-        }
     }
     
 }
