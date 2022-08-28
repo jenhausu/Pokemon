@@ -16,7 +16,7 @@ class PokemonViewModel: ObservableObject {
     
     @MainActor
     func getPokemonList(limit: Int, offset: Int) async throws {
-        let request = PokemonListRequest(parameters: PokemonListRequest.Request(limit: limit, offset: offset))
+        let request = PokemonListHTTPRequest(parameters: PokemonListHTTPRequest.Request(limit: limit, offset: offset))
         
         let result = await httpClient.send(request)
         switch result {
@@ -31,8 +31,8 @@ class PokemonViewModel: ObservableObject {
         }
     }
     
-    func getPokemon(id: String) async throws -> PokemonDataRequest.Response {
-        let request = PokemonDataRequest(parameters: PokemonDataRequest.Request(id: id))
+    func getPokemon(id: String) async throws -> PokemonDataHTTPRequest.Response {
+        let request = PokemonDataHTTPRequest(parameters: PokemonDataHTTPRequest.Request(id: id))
         
         let result = await httpClient.send(request)
         switch result {
