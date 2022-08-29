@@ -26,7 +26,7 @@ final class PokemonViewModelTests: XCTestCase {
     }
     
     @MainActor
-    func testGetGokemonListData_Once() async {
+    func testGetPokemonListData_Once() async {
         do {
             try await sut.getPokemonList(limit: 20, offset: 0)
         } catch {
@@ -37,7 +37,7 @@ final class PokemonViewModelTests: XCTestCase {
     }
     
     @MainActor
-    func testGetGokemonListData_ThreeTime() async {
+    func testGetPokemonListData_ThreeTime() async {
         do {
             try await sut.getPokemonList(limit: 20, offset: 0)
             try await sut.getPokemonList(limit: 20, offset: sut.pokemonDatas.count)
@@ -50,7 +50,7 @@ final class PokemonViewModelTests: XCTestCase {
     }
     
     @MainActor
-    func testGetGokemonListData_SameParam_NoReduntantItemAppend() async {
+    func testGetPokemonListData_SameParam_NoReduntantItemAppend() async {
         do {
             try await sut.getPokemonList(limit: 20, offset: 0)
             try await sut.getPokemonList(limit: 20, offset: 20)
@@ -63,7 +63,7 @@ final class PokemonViewModelTests: XCTestCase {
     }
     
     @MainActor
-    func testGetGokemonListData_DataOrderAscending() async {
+    func testGetPokemonListData_DataOrderAscending() async {
         do {
             try await sut.getPokemonList(limit: 20, offset: 0)
             try await sut.getPokemonList(limit: 20, offset: sut.pokemonDatas.count)
