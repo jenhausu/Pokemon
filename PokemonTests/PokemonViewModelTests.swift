@@ -68,6 +68,8 @@ final class PokemonViewModelTests: XCTestCase {
                 lastDataId = id
             }
         }
+        
+        XCTAssertEqual(sut.pokemonDatas.count, 100)
     }
     
     // MARK: - Favorite
