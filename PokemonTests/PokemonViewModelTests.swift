@@ -25,6 +25,21 @@ final class PokemonViewModelTests: XCTestCase {
         sut.favritePokemons = []
     }
     
+    // MARK: - GetPokemonListData
+    
+    @MainActor
+    func testGetPokemonListData_Error_ThrowError() async {
+        do {
+            let sut = PokemonViewModel(httpClient: HTTPClientFailedStub())
+            try await sut.getPokemonList(limit: 20, offset: 0)
+            XCTAssert(false)
+        } catch StubError.errorReturn {
+            XCTAssert(true)
+        } catch {
+            XCTAssertThrowsError(error.localizedDescription)
+        }
+    }
+    
     @MainActor
     func testGetPokemonListData_Once() async {
         do {
@@ -85,6 +100,20 @@ final class PokemonViewModelTests: XCTestCase {
         XCTAssertEqual(sut.pokemonDatas.count, 100)
     }
     
+    // MARK: - GetPokemonData
+    
+    func testGetPokemonData_Error_ThrowError() async {
+        do {
+            let sut = PokemonViewModel(httpClient: HTTPClientFailedStub())
+            _ = try await sut.getPokemon(id: "")
+            XCTAssert(false)
+        } catch StubError.errorReturn {
+            XCTAssert(true)
+        } catch {
+            XCTAssertThrowsError(error.localizedDescription)
+        }
+    }
+    
     // MARK: - Favorite
     
     func testAddFavorite_twoItem_countTwo() {
@@ -133,11 +162,22 @@ final class PokemonViewModelTests: XCTestCase {
     
 }
 
-class HTTPClientStub: HTTPClientProtocol {
-    
-    enum StubError: Error {
-        case notExpectRequestType
+enum StubError: Error {
+    case errorReturn
+    case notExpectRequestType
+}
+
+class HTTPClientFailedStub: HTTPClientProtocol {
+    func send<Req>(_ request: Req) async -> Result<Req.ResponseType, Error> where Req : NetworkKit.HTTPRequest {
+        await self.send(request, handlers: [])
     }
+    
+    func send<Req: HTTPRequest>(_ request: Req, handlers: [ResponseHandler]) async -> Result<Req.ResponseType, Error> {
+        .failure(StubError.errorReturn)
+    }
+}
+
+class HTTPClientStub: HTTPClientProtocol {
     
     func send<Req>(_ request: Req) async -> Result<Req.ResponseType, Error> where Req : NetworkKit.HTTPRequest {
         await self.send(request, handlers: [])
