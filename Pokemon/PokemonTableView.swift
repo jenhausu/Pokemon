@@ -14,7 +14,7 @@ struct PokemonTableView: View {
     
     @State private var isFavoriteViewPresented: Bool = false
     
-    @StateObject var viewModel = PokemonViewModel()
+    @StateObject var viewModel = PokemonViewModel(httpClient: HTTPClient())
     @StateObject var routeManager = RouteManager()
         
     var body: some View {

@@ -7,10 +7,11 @@
 
 import XCTest
 @testable import Pokemon
+@testable import NetworkKit
 
 final class PokemonViewModelTests: XCTestCase {
     
-    let sut = PokemonViewModel()
+    let sut = PokemonViewModel(httpClient: HTTPClientStub())
     
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -113,6 +114,35 @@ final class PokemonViewModelTests: XCTestCase {
         sut.removeFavorite(pokemon3)
         
         XCTAssertEqual(sut.favritePokemons.count, 2)
+    }
+    
+}
+
+class HTTPClientStub: HTTPClientProtocol {
+    
+    enum StubError: Error {
+        case notExpectRequestType
+    }
+    
+    func send<Req>(_ request: Req) async -> Result<Req.ResponseType, Error> where Req : NetworkKit.HTTPRequest {
+        await self.send(request, handlers: [])
+    }
+    
+    func send<Req: HTTPRequest>(_ request: Req, handlers: [ResponseHandler]) async -> Result<Req.ResponseType, Error> {
+        if let request = request as? PokemonListHTTPRequest {
+            let limit = request.parameters.limit
+            let offset = request.parameters.offset
+            
+            var results: [PokemonListHTTPRequest.Response.Result] = []
+            for index in (offset + 1)...(offset + limit) {
+                results.append(PokemonListHTTPRequest.Response.Result(name: "bulbasaur", url: "https://pokeapi.co/api/v2/pokemon/\(index)/"))
+            }
+            let response = PokemonListHTTPRequest.Response(results: results)
+            
+            return .success(response as! Req.ResponseType)
+        } else {
+            return .failure(StubError.notExpectRequestType)
+        }
     }
     
 }

@@ -12,7 +12,11 @@ class PokemonViewModel: ObservableObject {
     @Published var pokemonDatas: [PokemonData] = []
     @Published var favritePokemons: [PokemonData] = []
     
-    private let httpClient = HTTPClient()
+    let httpClient: HTTPClientProtocol
+    
+    init(httpClient: HTTPClientProtocol = HTTPClient()) {
+        self.httpClient = httpClient
+    }
     
     @MainActor
     func getPokemonList(limit: Int, offset: Int) async throws {
