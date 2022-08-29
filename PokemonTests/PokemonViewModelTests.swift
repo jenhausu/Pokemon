@@ -50,6 +50,19 @@ final class PokemonViewModelTests: XCTestCase {
     }
     
     @MainActor
+    func testGetGokemonListData_SameParam_NoReduntantItemAppend() async {
+        do {
+            try await sut.getPokemonList(limit: 20, offset: 0)
+            try await sut.getPokemonList(limit: 20, offset: 20)
+            try await sut.getPokemonList(limit: 20, offset: 20)
+        } catch {
+            XCTAssertThrowsError(error.localizedDescription)
+        }
+        
+        XCTAssertEqual(sut.pokemonDatas.count, 40)
+    }
+    
+    @MainActor
     func testGetGokemonListData_DataOrderAscending() async {
         do {
             try await sut.getPokemonList(limit: 20, offset: 0)
@@ -137,7 +150,8 @@ class HTTPClientStub: HTTPClientProtocol {
             
             var results: [PokemonListHTTPRequest.Response.Result] = []
             for index in (offset + 1)...(offset + limit) {
-                results.append(PokemonListHTTPRequest.Response.Result(name: "bulbasaur", url: "https://pokeapi.co/api/v2/pokemon/\(index)/"))
+                let result = PokemonListHTTPRequest.Response.Result(name: "bulbasaur", url: "https://pokeapi.co/api/v2/pokemon/\(index)/")
+                results.append(result)
             }
             let response = PokemonListHTTPRequest.Response(results: results)
             

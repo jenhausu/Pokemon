@@ -9,7 +9,8 @@ import Foundation
 
 struct PokemonData: Identifiable, Equatable {
     static func == (lhs: PokemonData, rhs: PokemonData) -> Bool {
-        lhs.id == rhs.id
+        lhs.pokemonId == rhs.pokemonId &&
+        lhs.name == rhs.name
     }
     
     let id = UUID()

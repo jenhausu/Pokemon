@@ -27,7 +27,10 @@ class PokemonViewModel: ObservableObject {
         case .success(let response):
             for pokemon in response.results {
                 if let url = URL(string: pokemon.url) {
-                    pokemonDatas.append(PokemonData(pokemonId: url.lastPathComponent, name: pokemon.name))
+                    let data = PokemonData(pokemonId: url.lastPathComponent, name: pokemon.name)
+                    if !pokemonDatas.contains(data) {
+                        pokemonDatas.append(data)
+                    }
                 }
             }
         case .failure(let error):
