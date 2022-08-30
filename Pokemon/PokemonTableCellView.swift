@@ -59,24 +59,22 @@ struct PokemonTableCellView: View {
             .tint(.red)
         }
         .padding()
-        .onAppear {
+        .task {
             if viewModel.favritePokemons.contains(data) {
                 favorite = true
             } else {
                 favorite = false
             }
             
-            Task {
-                if dataDidLoad == false {
-                    dataDidLoad = true
-                    do {
-                        let response = try await viewModel.getPokemon(id: data.pokemonId)
-                        data.height = "\(response.height)"
-                        data.weight = "\(response.weight)"
-                        data.pictureUrl = URL(string: response.sprites.front_default)
-                        data.types = response.types.map { PokemonData.PokemonType(name: $0.type.name) }
-                    }
-                }
+            if dataDidLoad == false {
+                dataDidLoad = true
+                do {
+                    let response = try await viewModel.getPokemon(id: data.pokemonId)
+                    data.height = "\(response.height)"
+                    data.weight = "\(response.weight)"
+                    data.pictureUrl = URL(string: response.sprites.front_default)
+                    data.types = response.types.map { PokemonData.PokemonType(name: $0.type.name) }
+                } catch { }
             }
         }
         .onTapGesture {

@@ -32,16 +32,14 @@ struct PokemonTableView: View {
                     PokemonTableCellView(data: data, viewModel: viewModel)
                 }
                 ProgressView()
-                    .onAppear {
-                        Task {
-                            do {
-                                guard !isLoading else { return }
-                                isLoading = true
-                                try await viewModel.getPokemonList(limit: 20,
-                                                                   offset: viewModel.pokemonDatas.count)
-                                isLoading = false
-                            }
-                        }
+                    .task {
+                        do {
+                            guard !isLoading else { return }
+                            isLoading = true
+                            try await viewModel.getPokemonList(limit: 20,
+                                                               offset: viewModel.pokemonDatas.count)
+                            isLoading = false
+                        } catch { }
                     }
             }
             .background(Color.gray)
