@@ -77,6 +77,7 @@ struct PokemonTableCellView: View {
                 } catch { }
             }
         }
+        .contentShape(Rectangle())
         .onTapGesture {
             routeManager.selectedPokemon = data
             routeManager.isDetailViewPresented = true
