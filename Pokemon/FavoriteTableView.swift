@@ -34,7 +34,10 @@ struct FavoriteTableView: View {
                         viewModel.favritePokemons = viewModel.favritePokemons.filter { $0.pokemonId != data.pokemonId }
                     }
                 } label: {
-                    Image(systemName: "chevron.left")
+                    HStack {
+                        Image(systemName: "chevron.left")
+                        Text("Pokemon")
+                    }
                 }
 
             }
