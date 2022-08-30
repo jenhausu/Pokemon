@@ -10,7 +10,8 @@ import Kingfisher
 
 struct FavoriteTableCellView: View {
     
-    @Binding var data: PokemonData
+    let data: PokemonData
+    @Binding var prepareToRemoveData: [PokemonData]
     @ObservedObject var viewModel: PokemonViewModel
     
     @State private var favorite: Bool = false
@@ -39,9 +40,9 @@ struct FavoriteTableCellView: View {
             Spacer()
             Button {
                 if favorite {
-                    viewModel.favritePokemons = viewModel.favritePokemons.filter { $0.id != data.id }
+                    prepareToRemoveData.append(data)
                 } else {
-                    viewModel.favritePokemons.append(data)
+                    prepareToRemoveData = prepareToRemoveData.filter { $0.id != data.id }
                 }
                 
                 favorite.toggle()
@@ -67,6 +68,6 @@ struct FavoriteTableCellView: View {
 
 struct FavoriteTableCellView_Previews: PreviewProvider {
     static var previews: some View {
-        FavoriteTableCellView(data: .constant(SampleData.data), viewModel: PokemonViewModel())
+        FavoriteTableCellView(data: SampleData.data, prepareToRemoveData: .constant([]), viewModel: PokemonViewModel())
     }
 }

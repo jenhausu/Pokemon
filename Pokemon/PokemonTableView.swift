@@ -60,7 +60,7 @@ struct PokemonTableView: View {
         }
         .background(
             NavigationLink(isActive: $isFavoriteViewPresented, destination: {
-                FavoriteTableView(datas: viewModel.favritePokemons, viewModel: viewModel)
+                FavoriteTableView(viewModel: viewModel)
             }, label: {
                 EmptyView()
             })

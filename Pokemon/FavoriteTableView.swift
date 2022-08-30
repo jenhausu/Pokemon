@@ -9,25 +9,41 @@ import SwiftUI
 
 struct FavoriteTableView: View {
     
-    let datas: [PokemonData]
-    
     @ObservedObject var viewModel: PokemonViewModel
-    
+    @State private var prepareToRemoveDatas: [PokemonData] = []
+        
+    @Environment(\.dismiss) private var dismiss
+
     var body: some View {
         ScrollView {
             LazyVStack {
-                ForEachWithIndex(datas) { index, element in
-                    FavoriteTableCellView(data: .constant(datas[index]), viewModel: viewModel)
+                ForEach(viewModel.favritePokemons) { element in
+                    FavoriteTableCellView(data: element, prepareToRemoveData: $prepareToRemoveDatas, viewModel: viewModel)
                 }
             }
             .background(Color.gray)
+            .animation(.easeInOut, value: viewModel.favritePokemons)
         }
         .navigationTitle("Favorite")
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItemGroup(placement: .navigationBarLeading) {
+                Button {
+                    dismiss()
+                    for data in prepareToRemoveDatas {
+                        viewModel.favritePokemons = viewModel.favritePokemons.filter { $0.pokemonId != data.pokemonId }
+                    }
+                } label: {
+                    Image(systemName: "chevron.left")
+                }
+
+            }
+        }
     }
 }
 
 struct FavoriteTableView_Previews: PreviewProvider {
     static var previews: some View {
-        FavoriteTableView(datas: [SampleData.data], viewModel: PokemonViewModel())
+        FavoriteTableView(viewModel: PokemonViewModel())
     }
 }
