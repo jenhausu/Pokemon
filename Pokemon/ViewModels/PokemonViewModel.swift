@@ -22,19 +22,14 @@ class PokemonViewModel: ObservableObject {
     func getPokemonList(limit: Int, offset: Int) async throws {
         let request = PokemonListHTTPRequest(parameters: PokemonListHTTPRequest.Request(limit: limit, offset: offset))
         
-        let result = await httpClient.send(request)
-        switch result {
-        case .success(let response):
-            for pokemon in response.results {
-                if let url = URL(string: pokemon.url) {
-                    let data = PokemonData(pokemonId: url.lastPathComponent, name: pokemon.name)
-                    if !pokemonDatas.contains(data) {
-                        pokemonDatas.append(data)
-                    }
+        let response = try await httpClient.send(request).get()
+        for pokemon in response.results {
+            if let url = URL(string: pokemon.url) {
+                let data = PokemonData(pokemonId: url.lastPathComponent, name: pokemon.name)
+                if !pokemonDatas.contains(data) {
+                    pokemonDatas.append(data)
                 }
             }
-        case .failure(let error):
-            throw error
         }
     }
     
