@@ -67,13 +67,13 @@ struct PokemonTableCellView: View {
             }
             
             if dataDidLoad == false {
-                dataDidLoad = true
                 do {
                     let response = try await viewModel.getPokemon(id: data.pokemonId)
                     data.height = "\(response.height)"
                     data.weight = "\(response.weight)"
                     data.pictureUrl = URL(string: response.sprites.front_default)
                     data.types = response.types.map { PokemonData.PokemonType(name: $0.type.name) }
+                    dataDidLoad = true
                 } catch { }
             }
         }
