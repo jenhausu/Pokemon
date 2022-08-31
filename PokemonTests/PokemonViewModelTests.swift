@@ -28,15 +28,16 @@ final class PokemonViewModelTests: XCTestCase {
     // MARK: - GetPokemonListData
     
     func testGetPokemonListData_Error_ThrowError() async {
+        var returnError: (any Error)?
+        let sut = PokemonViewModel(httpClient: HTTPClientFailedStub())
+        
         do {
-            let sut = PokemonViewModel(httpClient: HTTPClientFailedStub())
-            try await sut.getPokemonList(limit: 20, offset: 0)
-            XCTAssert(false)
-        } catch StubError.errorReturn {
-            XCTAssert(true)
+            _ = try await sut.getPokemonList(limit: 20, offset: 0)
         } catch {
-            XCTAssertThrowsError(error.localizedDescription)
+            returnError = error
         }
+        
+        XCTAssertEqual(returnError as? StubError, StubError.errorReturn)
     }
     
     func testGetPokemonListData_Once() async {
@@ -98,15 +99,16 @@ final class PokemonViewModelTests: XCTestCase {
     // MARK: - GetPokemonData
     
     func testGetPokemonData_Error_ThrowError() async {
+        var returnError: (any Error)?
+        let sut = PokemonViewModel(httpClient: HTTPClientFailedStub())
+        
         do {
-            let sut = PokemonViewModel(httpClient: HTTPClientFailedStub())
             _ = try await sut.getPokemon(id: "")
-            XCTAssert(false)
-        } catch StubError.errorReturn {
-            XCTAssert(true)
         } catch {
-            XCTAssertThrowsError(error.localizedDescription)
+            returnError = error
         }
+        
+        XCTAssertEqual(returnError as? StubError, StubError.errorReturn)
     }
     
     // MARK: - Favorite
