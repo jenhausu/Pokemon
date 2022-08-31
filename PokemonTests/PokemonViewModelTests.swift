@@ -98,6 +98,19 @@ final class PokemonViewModelTests: XCTestCase {
     
     // MARK: - GetPokemonData
     
+    func testGetPokemonData_success() async {
+        let sut = PokemonViewModel(httpClient: HTTPClientStub())
+        var response: PokemonDataHTTPRequest.Response?
+        
+        do {
+            response = try await sut.getPokemon(id: "1")
+        } catch {
+            XCTAssertThrowsError(error.localizedDescription)
+        }
+        
+        XCTAssertTrue(response != nil)
+    }
+    
     func testGetPokemonData_Error_ThrowError() async {
         var returnError: (any Error)?
         let sut = PokemonViewModel(httpClient: HTTPClientFailedStub())
@@ -192,6 +205,17 @@ class HTTPClientStub: HTTPClientProtocol {
             }
             let response = PokemonListHTTPRequest.Response(results: results)
             
+            return .success(response as! Req.ResponseType)
+        } else if let request = request as? PokemonDataHTTPRequest {
+            let response = PokemonDataHTTPRequest.Response(
+                id: 1,
+                name: "",
+                height: 100,
+                weight: 100,
+                sprites: PokemonDataHTTPRequest.Response.Sprite(front_default: ""),
+                types: [PokemonDataHTTPRequest.Response.ChildType(type: PokemonDataHTTPRequest.Response.ChildType.TypeStruct(name: "", url: ""))])
+
+
             return .success(response as! Req.ResponseType)
         } else {
             return .failure(StubError.notExpectRequestType)

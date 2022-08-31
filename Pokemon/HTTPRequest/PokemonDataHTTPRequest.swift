@@ -30,9 +30,9 @@ struct PokemonDataHTTPRequest: HTTPParamRequest {
         }
         
         struct ChildType: Decodable {
-            let type: `Type`
+            let type: TypeStruct
             
-            struct `Type`: Decodable {
+            struct TypeStruct: Decodable {
                 let name: String
                 let url: String
             }
