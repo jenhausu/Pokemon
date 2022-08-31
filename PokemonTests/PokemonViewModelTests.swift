@@ -27,7 +27,6 @@ final class PokemonViewModelTests: XCTestCase {
     
     // MARK: - GetPokemonListData
     
-    @MainActor
     func testGetPokemonListData_Error_ThrowError() async {
         do {
             let sut = PokemonViewModel(httpClient: HTTPClientFailedStub())
@@ -40,7 +39,6 @@ final class PokemonViewModelTests: XCTestCase {
         }
     }
     
-    @MainActor
     func testGetPokemonListData_Once() async {
         do {
             try await sut.getPokemonList(limit: 20, offset: 0)
@@ -51,7 +49,6 @@ final class PokemonViewModelTests: XCTestCase {
         XCTAssertEqual(sut.pokemonDatas.count, 20)
     }
     
-    @MainActor
     func testGetPokemonListData_ThreeTime() async {
         do {
             try await sut.getPokemonList(limit: 20, offset: 0)
@@ -64,7 +61,6 @@ final class PokemonViewModelTests: XCTestCase {
         XCTAssertEqual(sut.pokemonDatas.count, 60)
     }
     
-    @MainActor
     func testGetPokemonListData_SameParam_NoReduntantItemAppend() async {
         do {
             try await sut.getPokemonList(limit: 20, offset: 0)
@@ -77,7 +73,6 @@ final class PokemonViewModelTests: XCTestCase {
         XCTAssertEqual(sut.pokemonDatas.count, 40)
     }
     
-    @MainActor
     func testGetPokemonListData_DataOrderAscending() async {
         do {
             try await sut.getPokemonList(limit: 20, offset: 0)
