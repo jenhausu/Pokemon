@@ -11,18 +11,19 @@ import XCTest
 
 final class PokemonViewModelTests: XCTestCase {
     
-    let sut = PokemonViewModel(httpClient: HTTPClientStub())
+    var sut: PokemonViewModel! = PokemonViewModel(httpClient: HTTPClientStub())
     
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-        sut.pokemonDatas = []
-        sut.favritePokemons = []
+    weak var weakSUT: PokemonViewModel?
+    
+    override func setUp() {
+        weakSUT = sut
     }
     
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        sut.pokemonDatas = []
-        sut.favritePokemons = []
+    override func tearDown() {
+        super.tearDown()
+        
+        sut = nil
+        XCTAssertNil(weakSUT)
     }
     
     // MARK: - GetPokemonListData
