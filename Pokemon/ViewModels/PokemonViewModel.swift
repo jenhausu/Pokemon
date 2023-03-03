@@ -18,16 +18,17 @@ class PokemonViewModel: ObservableObject {
         self.httpClient = httpClient
     }
     
-    @MainActor
     func getPokemonList(limit: Int, offset: Int) async throws {
         let request = PokemonListHTTPRequest(parameters: PokemonListHTTPRequest.Request(limit: limit, offset: offset))
         
         let response = try await httpClient.send(request).get()
         for pokemon in response.results {
-            if let url = URL(string: pokemon.url) {
+            guard let url = URL(string: pokemon.url) else { continue }
+            
+            DispatchQueue.main.async {
                 let data = PokemonData(pokemonId: url.lastPathComponent, name: pokemon.name)
-                if !pokemonDatas.contains(data) {
-                    pokemonDatas.append(data)
+                if !self.pokemonDatas.contains(data) {
+                    self.pokemonDatas.append(data)
                 }
             }
         }
